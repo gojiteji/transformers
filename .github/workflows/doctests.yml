@@ -3,7 +3,7 @@ name: Doctests
 on:
   push:
     branches:
-      - doctest*
+      - run_fix_tf_text_ver
   repository_dispatch:
   schedule:
     - cron: "17 2 * * *"
