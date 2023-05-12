@@ -3,7 +3,7 @@ name: Build docker images (scheduled)
 on:
   push:
     branches:
-      - new_cudnn
+      - run_new_cudnn
   repository_dispatch:
   workflow_call:
     inputs:
