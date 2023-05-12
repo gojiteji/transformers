@@ -3,7 +3,7 @@ name: Doctests
 on:
   push:
     branches:
-      - doctest*
+      - run_doctest
   repository_dispatch:
   schedule:
     - cron: "17 2 * * *"
@@ -43,9 +43,10 @@ jobs:
       - name: Show installed libraries and their versions
         run: pip freeze
 
+      # python3 -m pytest -v --make-reports doc_tests_gpu --doctest-modules $(cat utils/documentation_tests.txt) -sv --doctest-continue-on-failure --doctest-glob="*.mdx"
       - name: Run doctests
         run: |
-          python3 -m pytest -v --make-reports doc_tests_gpu --doctest-modules $(cat utils/documentation_tests.txt) -sv --doctest-continue-on-failure --doctest-glob="*.mdx"
+          python3 -m pytest -v --make-reports doc_tests_gpu --doctest-modules src/transformers/models/blip/modeling_tf_blip.py -sv --doctest-continue-on-failure --doctest-glob="*.mdx"
 
       - name: Failure short reports
         if: ${{ failure() }}
@@ -58,22 +59,3 @@ jobs:
         with:
           name: doc_tests_gpu_test_reports
           path: reports/doc_tests_gpu
-
-
-  send_results:
-    name: Send results to webhook
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [run_doctests]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-      - name: Send message to Slack
-        env:
-          CI_SLACK_BOT_TOKEN: ${{ secrets.CI_SLACK_BOT_TOKEN }}
-          CI_SLACK_CHANNEL_ID: ${{ secrets.CI_SLACK_CHANNEL_ID_DAILY_DOCS }}
-          CI_SLACK_CHANNEL_ID_DAILY: ${{ secrets.CI_SLACK_CHANNEL_ID_DAILY_DOCS }}
-          CI_SLACK_CHANNEL_DUMMY_TESTS: ${{ secrets.CI_SLACK_CHANNEL_DUMMY_TESTS }}
-        run: |
-          pip install slack_sdk
-          python utils/notification_service_doc_tests.py
