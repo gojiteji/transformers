@@ -24,7 +24,6 @@ from ...modeling_tf_outputs import (
     TFCausalLMOutputWithCrossAttentions,
 )
 from ...modeling_tf_utils import (
-    DUMMY_INPUTS,
     TFPreTrainedModel,
     get_initializer,
     get_tf_activation,
@@ -33,7 +32,7 @@ from ...modeling_tf_utils import (
     unpack_inputs,
 )
 from ...tf_utils import invert_attention_mask, stable_softmax
-from ...utils import add_start_docstrings_to_model_forward, logging
+from ...utils import DUMMY_INPUTS, add_start_docstrings_to_model_forward, logging
 from .configuration_blip import BlipTextConfig
 
 
