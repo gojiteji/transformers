@@ -15,9 +15,8 @@
 
 from typing import Optional, Tuple
 
-import flax.linen as nn
 import flax.linen as linen
-
+import flax.linen as nn
 import jax
 import jax.numpy as jnp
 from flax.core.frozen_dict import FrozenDict, freeze, unfreeze
@@ -28,8 +27,8 @@ from jax import lax
 
 from transformers.modeling_flax_outputs import FlaxBaseModelOutput, FlaxCausalLMOutput
 from transformers.modeling_flax_utils import ACT2FN, FlaxPreTrainedModel, append_call_sample_docstring
-from transformers.utils import add_start_docstrings, add_start_docstrings_to_model_forward, logging
 from transformers.models.gpt_neox.configuration_gpt_neox import GPTNeoXConfig
+from transformers.utils import add_start_docstrings, add_start_docstrings_to_model_forward, logging
 
 
 logger = logging.get_logger(__name__)
@@ -130,9 +129,6 @@ def rotate_halfNP(x):
     return jnp.concatenate((-x2, x1), axis=-1)
 
 
-import numpy as np
-
-
 # q,k are of shape [bs, n_heads, seq_len, head_dim]
 # cos, sin are of shape #[1, 1, seq_len, dim]
 # position_ids is of shape [bs, seq_len]
@@ -159,7 +155,6 @@ class FlaxGPTNeoXAttention(linen.Module):
         self.hidden_size = config.hidden_size
         self.head_size = self.hidden_size // self.num_attention_heads
         self.rotary_ndims = int(self.head_size * config.rotary_pct)
-        max_positions = config.max_position_embeddings
         self.rotary_emb = RotaryEmbeddingNP(
             dim=self.rotary_ndims, max_seq_len_cached=config.max_position_embeddings, base=config.rotary_emb_base
         )
